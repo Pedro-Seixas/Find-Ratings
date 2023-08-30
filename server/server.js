@@ -5,7 +5,11 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 
 app.get("/ratings", (req, res) =>{
-    res.json({"ratings": ["5", "4", "1"]});
+    console.log(req.query);
+    if(req.query.title == "test")
+    {
+        res.json({"ratings": ["5", "4", "1"]});
+    }
 });
 
 //-------------------------------
