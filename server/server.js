@@ -18,7 +18,7 @@ app.get("/ratings", (req, res) =>{
 //   method: 'GET',
 //   headers: {
 //     accept: 'application/json',
-//     Authorization:
+//     Authorization: [Your API KEY]
 //   }
 // };
 
@@ -52,5 +52,24 @@ app.get("/ratings", (req, res) =>{
 //     console.log(rating);
 
 // });
+
+
+//------------------------------
+//        JustWatch API
+//------------------------------
+
+// url = "https://www.justwatch.com/us/movie/oppenheimer";
+
+// axios.get(url).then(urlResponse =>{
+//     const $ = cheerio.load(urlResponse.data)
+//     //Find the first rating
+//     $("span.jw-scoring-listing__rating--no-link").each(function(i, element){
+//         if(i == 0)
+//         {
+//             console.log($(this).text());
+//         }
+//     });
+// });
+
 
 app.listen(5000);
