@@ -2,8 +2,6 @@ import React, {useEffect, useState} from 'react'
 import "./App.css";
 
 function App(){
-
-  const [backendData, setBackendData] = useState("");
   const [title, setTitle] = useState('');
 
   function handleSubmit(e){
@@ -14,7 +12,7 @@ function App(){
       response => response.json()
       ).then(
         data => {
-          console.log(data.ratings);
+          console.log(data);
         }
       )
     //Check if it has space in it and treat it
@@ -37,37 +35,37 @@ function App(){
         <div class="button-container">
           <button 
             class="search-button"
-            type="submit">submit</button>
+            type="submit">Submit</button>
       </div>
       </form>
       </div>
-      <div class="wrapper">
-  <div class="rating-group">
-    <img src="/img/metaCritic.png" class="source"/>
-    <h1 class="rating">
-      96%
-    </h1>
-  </div>
-  
-  <div class="rating-group">
-    <img src="/img/RT.png" class="source"/>
-    <h1 class="rating">
-      66%
-    </h1>
-  </div>
-  
-  <div class="rating-group">
-    <img src="/img/imdb.png" class="source"/>
-    <h1 class="rating">
-      92%
-    </h1>
-  </div>
-  <div class="rating-group">
-    <img src="/img/justWatch.png" class="source"/>
-    <h1 class="rating">
-      92%
-    </h1>
-  </div>
+  <div class="wrapper">
+    <div class="rating-group">
+      <img src="/img/imdb2.png" class="source"/>
+      <h1 class="rating">
+        92%
+      </h1>
+    </div>
+    <div class="rating-group">
+      <img src="/img/metaCritic.png" class="source"/>
+      <h1 class="rating">
+        96%
+      </h1>
+    </div>
+    
+    <div class="rating-group">
+      <img src="/img/RT.png" class="source"/>
+      <h1 class="rating">
+        66%
+      </h1>
+    </div>
+    
+    <div class="rating-group">
+      <img src="/img/justWatch.png" class="source"/>
+      <h1 class="rating">
+        92%
+      </h1>
+    </div>
 </div>
     </div>
 
