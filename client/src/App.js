@@ -2,21 +2,28 @@ import React, {useEffect, useState} from 'react'
 import "./App.css";
 
 function App(){
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState([]);
+  const [movieRating, setMovieRating] = useState([]);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
-  function handleSubmit(e){
-    e.preventDefault();
+  async function handleSubmit(e){
     const movieTitle = e.target.title.value;
 
-    fetch(`/ratings?title=${movieTitle}`).then(
-      response => response.json()
-      ).then(
-        data => {
-          console.log(data);
-        }
-      )
-    //Check if it has space in it and treat it
-    //Call function from routes to send to backend
+    e.preventDefault();
+    setTitle(movieTitle);
+
+    try{
+      const response = await fetch(`/ratings?title=${movieTitle}`);
+      const data = await response.json();
+      setMovieRating(data);
+      setFormSubmitted(true);
+
+    }catch(err){
+      console.error(err);
+      setMovieRating("n");
+      setFormSubmitted(true);
+
+    }
   }
 
   return(
@@ -39,35 +46,29 @@ function App(){
       </div>
       </form>
       </div>
-  <div class="wrapper">
-    <div class="rating-group">
-      <img src="/img/imdb2.png" class="source"/>
-      <h1 class="rating">
-        92%
-      </h1>
-    </div>
-    <div class="rating-group">
-      <img src="/img/metaCritic.png" class="source"/>
-      <h1 class="rating">
-        96%
-      </h1>
-    </div>
-    
-    <div class="rating-group">
-      <img src="/img/RT.png" class="source"/>
-      <h1 class="rating">
-        66%
-      </h1>
-    </div>
-    
-    <div class="rating-group">
+    {formSubmitted &&(
+  <div class="wrapper"> 
+      <div class="rating-group">
+        <img src="/img/imdb2.png" class="source"/>
+        <h1 class="rating">
+          {movieRating.imdb}
+        </h1>
+      </div>
+      <div class="rating-group">
+        <img src="/img/metaCritic.png" class="source"/>
+        <h1 class="rating">
+          {movieRating.metaCritic}
+        </h1>
+      </div>
+      <div class="rating-group">
       <img src="/img/justWatch.png" class="source"/>
       <h1 class="rating">
-        92%
+        {movieRating.justWatch}
       </h1>
     </div>
-</div>
-    </div>
+  </div>
+    )}
+  </div>
 
   )
 }

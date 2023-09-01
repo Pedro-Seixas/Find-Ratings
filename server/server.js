@@ -7,7 +7,6 @@ const cheerio = require('cheerio');
 app.get("/ratings", async (req, res) =>{
     try{
         const rating = await ratingJson(req.query.title);
-        console.log(rating);
         res.json(rating);
     }catch(err){
         console.error(err);
@@ -19,7 +18,7 @@ async function ratingJson(name){
     let imdbName = nameLower;
     let metaCriticName = nameLower;
     let justWatchName = nameLower;
-    let rtName = nameLower;
+    //let rtName = nameLower;
     try {
         const ratingJson = {
             imdb: "N",
@@ -76,7 +75,7 @@ async function getImdbRating(name){
             if (json.results[0].vote_average === null || json.results[0].vote_average === undefined) {
                 return "N";
             } else {
-                return json.results[0].vote_average;
+                return json.results[0].vote_average.toFixed(1);
             }
         } else {
             return "N"; 
@@ -126,75 +125,11 @@ async function getJustWatchRating(name){
         if (rating[0] === null || rating[0] === undefined){
             return "N";
         }else{
-            return rating[0];
+            return parseInt(rating[0].replace("%",""))/10;
         }
     }catch(err){
         return "N";
     }
 }
-
-//-------------------------------
-//         IMDB API
-//-------------------------------
-
-//To find movie by name and give details like rating and popularity
-// const url = 'https://api.themoviedb.org/3/search/movie?query=In%20Bruges&include_adult=false&language=en-US&page=1';
-// const options = {
-//   method: 'GET',
-//   headers: {
-//     accept: 'application/json',
-//     Authorization: [Your API KEY]
-//   }
-// };
-
-// fetch(url, options)
-//   .then(res => res.json())
-//   .then(json => console.log(json.results[0]))
-//   .catch(err => console.error('error:' + err));
-
-//-------------------------------
-//     Rotten Tomatoes API
-//-------------------------------
-
-// url = "https://www.rottentomatoes.com/m/barbie";
-
-// axios.get(url).then(urlResponse =>{
-//     const $ = cheerio.load(urlResponse.data);
-//     const rating = $("div.thumbnail-scoreboard-wrap>score-board").attr("audiencescore");
-//     console.log(rating);
-
-// });
-
-//------------------------------
-//        MetaCritic API
-//------------------------------
-
-// url = "https://www.metacritic.com/movie/nobody";
-
-// axios.get(url).then(urlResponse =>{
-//     const $ = cheerio.load(urlResponse.data);
-//     const rating = $("span.metascore_w.user").html();
-//     console.log(rating);
-
-// });
-
-
-//------------------------------
-//        JustWatch API
-//------------------------------
-
-// url = "https://www.justwatch.com/us/movie/oppenheimer";
-
-// axios.get(url).then(urlResponse =>{
-//     const $ = cheerio.load(urlResponse.data)
-//     //Find the first rating
-//     $("span.jw-scoring-listing__rating--no-link").each(function(i, element){
-//         if(i == 0)
-//         {
-//             console.log($(this).text());
-//         }
-//     });
-// });
-
 
 app.listen(5000);
