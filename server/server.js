@@ -13,6 +13,15 @@ app.get("/ratings", async (req, res) =>{
     }
 });
 
+app.get("/searchTitle", async (req, res) =>{
+    try{
+        const title = await searchMovieTitle(req.query.title);
+        res.json(title);
+    }catch(err){
+        console.error(err);
+    }
+});
+
 async function ratingJson(name){
     let nameLower = name.toLowerCase();
     let imdbName = nameLower;
@@ -29,10 +38,11 @@ async function ratingJson(name){
     
         if(name.indexOf(" ")>0)
         {
-            imdbName = nameLower.replace(" ","%20");
-            metaCriticName = nameLower.replace(" ","-");
+            imdbName = nameLower.replace(/\s/g,"%20");
+            metaCriticName = nameLower.replace(/\s/g,"-").replace(":","");
+            console.log(metaCriticName);
             justWatchName = metaCriticName;
-            rtName = nameLower.replace(" ","_");
+            //rtName = nameLower.replace(" ","_");
         }
 
         //ratingJson.rt = await getRTRating(rtName);
@@ -71,19 +81,20 @@ async function getImdbRating(name){
     try {
         const response = await fetch(url, options);
         const json = await response.json();
+
         if (json.results && json.results.length > 0) {
             if (json.results[0].vote_average === null || json.results[0].vote_average === undefined) {
-                return "N";
+                throw new Error;
             } else {
                 return json.results[0].vote_average.toFixed(1);
             }
-        } else {
-            return "N"; 
+        }else {
+            throw new Error;
         }
 
     } catch (err) {
         console.error('error:' + err);
-        return "N";
+        return "Not Found";
     }
 }
 
@@ -97,13 +108,13 @@ async function getMetaCriticRating(name){
         const rating = $("span.metascore_w.user").html();
 
         if (rating === null || rating === undefined) {
-            return "N";
+            throw new Error;
         } else {
             return rating;
         }
     } catch (error) {
         console.error('Error: ' + error.message);
-        return "N";
+        return "Not Found";
     }
 }
 
@@ -123,13 +134,53 @@ async function getJustWatchRating(name){
         });
 
         if (rating[0] === null || rating[0] === undefined){
-            return "N";
+            throw new Error;
         }else{
             return parseInt(rating[0].replace("%",""))/10;
         }
     }catch(err){
-        return "N";
+        return "Not Found";
     }
 }
 
+async function searchMovieTitle(name){
+const url = `https://api.themoviedb.org/3/search/movie?query=${name}&include_adult=false&language=en-US&page=1`;
+
+    const options = {
+    method: 'GET',
+    headers: {
+        accept: 'application/json',
+        Authorization: []
+    }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const json = await response.json();
+        const titles = [];
+        let count = 0;
+        
+        if (json.results && json.results.length > 0) {
+            if (json.results[0].vote_average === null || json.results[0].vote_average === undefined) {
+                throw new Error;
+            } else {
+                for(const results of json.results){
+                    if(count < 7){
+                        titles.push(results.original_title);
+                        count++;
+                    }else{
+                        break;
+                    }
+                }
+                return titles;
+            }
+        } else {
+            throw new Error("No Results");
+        }
+
+    } catch (err) {
+        console.error('error:' + err.message);
+        return "N";
+    }
+}
 app.listen(5000);

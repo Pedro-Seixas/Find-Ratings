@@ -13,54 +13,39 @@ body {
 
 .input-form {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
-.input-form input{
-  background-color: #f0f0f0;
-  color: black;
+.input-container{
+  position: relative;
+  display: flex;
+  height: 30px;
+  align-items: center;
+}
+.input-text{
+  padding-left: 30px;
+  width: 300px;
+  height: 100%;
   border: 2px solid #183D3D;
   border-radius: 20px;
-  height: 30px;
-  width: 400px;
+  background-color: #f0f0f0;
   font-size: 18px;
-  padding-left: 10px;
-  padding-right: 10px;
 }
 
-.button-container{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1%;
+.icon{
+  bottom: 1px;
+  padding-left: 6px;
+  position: absolute;
+  font-size: 24px;
+  cursor: pointer;
 }
 
-.button-container button{
-  width: 100px;
-  height: 30px;
-  border-radius: 10px;
-  background-color: #183D3D;
-  color: white;
-  font-weight: bold;
-  border: 0px;
-  margin-top: 5px;
-}
-
-.button-container button:hover{
-  background-color: #5C8374;
-  color: white;
-}
-
-.button-container button:active{
-  background-color: #93B1A6;
-  border: 0px;
-  color: white;
-  width: 100px;
-  height: 30px;
-  font-size: 14px;
+.submit-button{
+  background: none;
+  padding: 0px;
+  border: none;
 }
 
 .wrapper {
@@ -96,3 +81,31 @@ body {
   padding: 5px;
 }
 
+.suggestions-container{
+  position: absolute;
+  top: 100%;
+  display: flex;
+  width: 380px;
+  flex-direction: column;
+  justify-content:flex-start;
+  border-left: 2px solid #183D3D;
+  border-right: 2px solid #183D3D;
+  border-bottom: 2px solid #183D3D;
+  background-color: rgba(0, 0, 0, 0.719);
+}
+
+.suggestions{
+  cursor: pointer;
+  color: white;
+}
+.suggestions h1{
+  font-size: 16px;
+  padding-left: 5px;
+}
+.suggestions:hover{
+  background-color: #5C8374;
+}
+
+.hidden{
+  display: none;
+}
