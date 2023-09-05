@@ -28,24 +28,29 @@ function App(){
     }
   }
 
-  async function onChangeHandler(e){
+  let timeoutId;
+  async function onChangeHandler(e) {
     setSearchTitle(e);
-    if(searchTitle.length>2){
-      try{
-        const response = await fetch(`/searchTitle?title=${e}`);
-        const data = await response.json();
-
-        if(data == "N"){
-          throw new Error;
+    if (e.length > 2) {
+      timeoutId = setTimeout(async () => {
+        try {
+          const response = await fetch(`/searchTitle?title=${e}`);
+          const data = await response.json();
+  
+          if (data === "N") {
+            throw new Error("Filme não encontrado");
+          } else {
+            setSuggestions(data);
+          }
+        } catch (err) {
+          setSuggestions("");
+          console.log(err);
         }
-
-        setSuggestions(data);
-        console.log(data);
-      }catch(err){
-        setSuggestions("");
-        console.log(err);
+      }, 500);
+    } else {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
       }
-    }else{
       setSuggestions([]);
     }
   }

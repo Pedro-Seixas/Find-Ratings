@@ -3,6 +3,7 @@ const app = express();
 const axios = require('axios');
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
+require('dotenv').config();
 
 app.get("/ratings", async (req, res) =>{
     try{
@@ -39,7 +40,7 @@ async function ratingJson(name){
         if(name.indexOf(" ")>0)
         {
             imdbName = nameLower.replace(/\s/g,"%20");
-            metaCriticName = nameLower.replace(/\s/g,"-").replace(":","");
+            metaCriticName = nameLower.replace(/\s/g,"-").replace(":","").replace(".","").replace(",","");
             console.log(metaCriticName);
             justWatchName = metaCriticName;
             //rtName = nameLower.replace(" ","_");
@@ -74,7 +75,7 @@ async function getImdbRating(name){
     method: 'GET',
     headers: {
         accept: 'application/json',
-        Authorization: []
+        Authorization: [process.env.IMDB_API]
     }
     };
 
@@ -150,7 +151,7 @@ const url = `https://api.themoviedb.org/3/search/movie?query=${name}&include_adu
     method: 'GET',
     headers: {
         accept: 'application/json',
-        Authorization: []
+        Authorization: [process.env.IMDB_API]
     }
     };
 
@@ -175,6 +176,7 @@ const url = `https://api.themoviedb.org/3/search/movie?query=${name}&include_adu
                 return titles;
             }
         } else {
+            console.log(process.env.IMDB_API);
             throw new Error("No Results");
         }
 
