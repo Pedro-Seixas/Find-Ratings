@@ -31,7 +31,7 @@ function SearchForm({ onRatingData }){
               const data = await response.json();
       
               if (data === "N") {
-                throw new Error("Filme não encontrado");
+                throw new Error("Movie Not Found");
               } else {
                 setSuggestions(data);
               }
