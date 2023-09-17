@@ -40,7 +40,7 @@ async function ratingJson(name){
         if(name.indexOf(" ")>0)
         {
             imdbName = nameLower.replace(/\s/g,"%20");
-            metaCriticName = nameLower.replace(/\s/g,"-").replace(":","").replace(".","").replace(",","");
+            metaCriticName = nameLower.replace(/\s/g,"-").replace(":","").replace(".","");
             console.log(metaCriticName);
             justWatchName = metaCriticName;
             //rtName = nameLower.replace(" ","_");
@@ -106,15 +106,14 @@ async function getMetaCriticRating(name){
         const urlResponse = await axios.get(url);
 
         const $ = cheerio.load(urlResponse.data);
-        const rating = $("span.metascore_w.user").html();
-
+        const rating = $("div.c-siteReviewScore_background-user>div>span").html();
         if (rating === null || rating === undefined) {
             throw new Error;
         } else {
             return rating;
         }
     } catch (error) {
-        console.error('Error: ' + error.message);
+        console.error('Error: ', error.message);
         return "Not Found";
     }
 }
@@ -176,7 +175,6 @@ const url = `https://api.themoviedb.org/3/search/movie?query=${name}&include_adu
                 return titles;
             }
         } else {
-            console.log(process.env.IMDB_API);
             throw new Error("No Results");
         }
 
