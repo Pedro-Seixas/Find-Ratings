@@ -67,8 +67,7 @@ async function ratingJson(name){
 //     return rating;
 // }
 
-
-async function getImdbRating(name){
+async function getMovieID(name){
     const url = `https://api.themoviedb.org/3/search/movie?query=${name}&include_adult=false&language=en-US&page=1`;
 
     const options = {
@@ -87,7 +86,7 @@ async function getImdbRating(name){
             if (json.results[0].vote_average === null || json.results[0].vote_average === undefined) {
                 throw new Error;
             } else {
-                return json.results[0].vote_average.toFixed(1);
+                return json.results[0].id;
             }
         }else {
             throw new Error;
@@ -95,6 +94,56 @@ async function getImdbRating(name){
 
     } catch (err) {
         console.error('error:' + err);
+        return "Not Found";
+    }
+}
+async function getImdbID(name){
+    const movie_id = await getMovieID(name);
+    const url = `https://api.themoviedb.org/3/movie/${movie_id}/external_ids`;
+
+    const options = {
+    method: 'GET',
+    headers: {
+        accept: 'application/json',
+        Authorization: [process.env.IMDB_API]
+    }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const json = await response.json();
+        if(json.imdb_id){
+            return json.imdb_id;
+        }else{
+            throw err;
+        }
+
+    } catch (err) {
+        console.error('error:' + err);
+        return "Not Found";
+    }
+
+}
+async function getImdbRating(name){
+    const imdb_id = await getImdbID(name);
+
+    const url = `https://www.imdb.com/title/${imdb_id}`;
+    const options = {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept': 'text/html',
+            'Referer': 'https://www.google.com/'
+          }
+    }
+    try {
+        const urlResponse = await axios.get(url, options);
+
+        const $ = cheerio.load(urlResponse.data);
+        const rating = $("div.sc-bde20123-2>span").html();
+        return rating
+    } catch (error) {
+        console.error('Error: ', error.message);
         return "Not Found";
     }
 }
@@ -184,3 +233,32 @@ const url = `https://api.themoviedb.org/3/search/movie?query=${name}&include_adu
     }
 }
 app.listen(5000);
+
+// const url = `https://api.themoviedb.org/3/search/movie?query=${name}&include_adult=false&language=en-US&page=1`;
+
+//     const options = {
+//     method: 'GET',
+//     headers: {
+//         accept: 'application/json',
+//         Authorization: [process.env.IMDB_API]
+//     }
+//     };
+
+//     try {
+//         const response = await fetch(url, options);
+//         const json = await response.json();
+
+//         if (json.results && json.results.length > 0) {
+//             if (json.results[0].vote_average === null || json.results[0].vote_average === undefined) {
+//                 throw new Error;
+//             } else {
+//                 return json.results[0].vote_average.toFixed(1);
+//             }
+//         }else {
+//             throw new Error;
+//         }
+
+//     } catch (err) {
+//         console.error('error:' + err);
+//         return "Not Found";
+//     }
